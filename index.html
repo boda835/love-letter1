@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Letter For You</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Great+Vibes&family=Inter:wght@300;400;500&display=swap"
+    rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at 50% 20%, #fff7f8 0%, #fbeded 50%, #f7dede 100%);
+      min-height: 100vh;
+      color: #4a2c2c;
+      overflow-x: hidden;
+    }
+
+    .font-luxury {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+
+    .font-cursive {
+      font-family: 'Great Vibes', cursive;
+    }
+
+    /* Envelope Styling */
+    .envelope-box {
+      width: 320px;
+      height: 220px;
+      position: relative;
+      background: #e6b7b7;
+      border-radius: 12px;
+      box-shadow: 0 20px 45px rgba(180, 83, 98, 0.25);
+      cursor: pointer;
+      perspective: 1000px;
+      transition: transform 0.4s ease;
+    }
+
+    .envelope-box:hover {
+      transform: translateY(-6px);
+    }
+
+    .envelope-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-left: 160px solid transparent;
+      border-right: 160px solid transparent;
+      border-top: 125px solid #d99f9f;
+      transform-origin: top;
+      transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 5;
+    }
+
+    .envelope-box.opened .envelope-flap {
+      transform: rotateX(180deg);
+      z-index: 1;
+    }
+
+    .envelope-pocket {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-left: 160px solid #f2c7c7;
+      border-right: 160px solid #f2c7c7;
+      border-bottom: 120px solid #e3abab;
+      border-radius: 0 0 12px 12px;
+      z-index: 4;
+    }
+
+    .wax-seal {
+      position: absolute;
+      top: 105px;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, #a82338 0%, #7d1222 100%);
+      color: #fff1f2;
+      box-shadow: 0 4px 15px rgba(125, 18, 34, 0.4);
+      z-index: 10;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .wax-seal:hover {
+      transform: translate(-50%, -50%) scale(1.08);
+      box-shadow: 0 6px 20px rgba(125, 18, 34, 0.6);
+    }
+
+    /* Polaroid Cards */
+    .polaroid-card {
+      background: #ffffff;
+      padding: 12px 12px 16px 12px;
+      border-radius: 4px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.35s ease;
+    }
+
+    .polaroid-card:hover {
+      transform: scale(1.04) rotate(0deg) !important;
+      box-shadow: 0 20px 35px rgba(180, 83, 98, 0.22);
+      z-index: 20;
+    }
+
+    /* Tape Effect */
+    .tape {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70px;
+      height: 22px;
+      background: rgba(255, 255, 255, 0.65);
+      border-radius: 2px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      backdrop-filter: blur(2px);
+    }
+
+    /* Floating Hearts */
+    @keyframes floatUp {
+      0% {
+        transform: translateY(105vh) scale(0.6) rotate(0deg);
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 0.6;
+      }
+
+      80% {
+        opacity: 0.8;
+      }
+
+      100% {
+        transform: translateY(-10vh) scale(1.2) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .floating-heart {
+      position: fixed;
+      pointer-events: none;
+      animation: floatUp 8s linear infinite;
+      z-index: 1;
+    }
+  </style>
+</head>
+
+<body class="flex flex-col min-h-screen relative selection:bg-rose-200">
+
+  <!-- Ambient Floating Hearts Background -->
+  <div id="heart-container" class="fixed inset-0 overflow-hidden pointer-events-none z-0"></div>
+
+  <!-- MAIN CONTAINER -->
+  <main class="relative z-10 flex-1 flex items-center justify-center p-4">
+
+    <!-- ========================================== -->
+    <!-- STEP 1: ENVELOPE (OPEN ME)                -->
+    <!-- ========================================== -->
+    <section id="step-1" class="flex flex-col items-center justify-center transition-all duration-700">
+      <div id="envelope" class="envelope-box my-6" onclick="openEnvelope()">
+        <div class="envelope-flap"></div>
+        <div class="envelope-pocket"></div>
+
+        <!-- Wax Seal with only 'Open me' -->
+        <button
+          class="wax-seal w-24 h-24 rounded-full flex flex-col items-center justify-center text-center cursor-pointer border-2 border-rose-300/40">
+          <span class="font-cursive text-2xl font-bold tracking-wide">Open me</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- STEP 2: 'MY FAV PICS OF YOU'               -->
+    <!-- ========================================== -->
+    <section id="step-2" class="hidden flex-col items-center max-w-5xl w-full py-8 transition-all duration-700">
+
+      <!-- Heading -->
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-luxury font-bold text-rose-950 mb-10 tracking-wide text-center">
+        My Fav Pics of You
+      </h1>
+
+      <!-- The 5 Photo Polaroids Grid -->
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 w-full max-w-4xl px-4 justify-items-center">
+
+        <!-- Photo 1 -->
+        <div class="polaroid-card relative w-64 cursor-pointer -rotate-2" onclick="showLightbox(this)">
+          <div class="tape"></div>
+          <div class="w-full h-80 overflow-hidden rounded bg-rose-50">
+            <img src="pics/pic1.jpeg" alt="Photo" class="w-full h-full object-cover">
+          </div>
+        </div>
+
+        <!-- Photo 2 -->
+        <div class="polaroid-card relative w-64 cursor-pointer rotate-2" onclick="showLightbox(this)">
+          <div class="tape"></div>
+          <div class="w-full h-80 overflow-hidden rounded bg-rose-50">
+            <img src="pics/pic2.jpeg" alt="Photo" class="w-full h-full object-cover">
+          </div>
+        </div>
+
+        <!-- Photo 3 -->
+        <div class="polaroid-card relative w-64 cursor-pointer -rotate-1" onclick="showLightbox(this)">
+          <div class="tape"></div>
+          <div class="w-full h-80 overflow-hidden rounded bg-rose-50">
+            <img src="pics/pic3.jpeg" alt="Photo" class="w-full h-full object-cover">
+          </div>
+        </div>
+
+        <!-- Photo 4 -->
+        <div class="polaroid-card relative w-64 cursor-pointer rotate-3" onclick="showLightbox(this)">
+          <div class="tape"></div>
+          <div class="w-full h-80 overflow-hidden rounded bg-rose-50">
+            <img src="pics/pic4.jpeg" alt="Photo" class="w-full h-full object-cover">
+          </div>
+        </div>
+
+        <!-- Photo 5 -->
+        <div class="polaroid-card relative w-64 cursor-pointer -rotate-2 sm:col-span-2 lg:col-span-1"
+          onclick="showLightbox(this)">
+          <div class="tape"></div>
+          <div class="w-full h-80 overflow-hidden rounded bg-rose-50">
+            <img src="pics/pic5.jpeg" alt="Photo" class="w-full h-full object-cover">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Button to Step 3 -->
+      <div class="mt-14">
+        <button onclick="goToLetter()"
+          class="px-8 py-3.5 rounded-full bg-rose-800 hover:bg-rose-900 text-white font-medium shadow-lg hover:shadow-xl transition-all duration-300 flex items-center space-x-2">
+          <span>Read My Letter</span>
+          <span>→</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- STEP 3: THE LOVE LETTER                    -->
+    <!-- ========================================== -->
+    <section id="step-3" class="hidden flex-col items-center max-w-2xl w-full px-4 py-8 transition-all duration-700">
+
+      <!-- Vintage Parchment Letter -->
+      <div class="w-full bg-[#fffcf7] p-8 sm:p-12 md:p-16 rounded-2xl shadow-2xl border border-rose-200/60 relative">
+
+        <!-- Decorative corner accents -->
+        <div class="absolute top-4 left-4 text-rose-300 text-xl font-serif">✦</div>
+        <div class="absolute top-4 right-4 text-rose-300 text-xl font-serif">✦</div>
+        <div class="absolute bottom-4 left-4 text-rose-300 text-xl font-serif">✦</div>
+        <div class="absolute bottom-4 right-4 text-rose-300 text-xl font-serif">✦</div>
+
+        <!-- Letter Body -->
+        <div class="text-center space-y-6">
+          <div class="text-rose-400 font-cursive text-3xl">Forever & Always</div>
+
+          <!-- Grammatically corrected message -->
+          <p class="font-luxury text-2xl sm:text-3xl md:text-4xl leading-relaxed text-rose-950 font-medium">
+            "I love you so much. You’re my everything, you’re my world. You are the prettiest girl I have ever seen, and
+            I never want to lose someone this perfect."
+          </p>
+
+          <div class="pt-4 flex justify-center text-rose-600 text-2xl">
+            ❤️
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap items-center justify-center gap-4 mt-8">
+        <button onclick="burstHearts()"
+          class="px-7 py-3 rounded-full bg-rose-600 hover:bg-rose-700 text-white shadow-md hover:shadow-lg transition">
+          Shower You With Love ❤️
+        </button>
+        <button onclick="goToPics()"
+          class="px-6 py-3 rounded-full bg-white/80 hover:bg-white text-rose-900 border border-rose-200 transition">
+          ← Back to Photos
+        </button>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Fullscreen Lightbox Modal -->
+  <div id="lightbox" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4 cursor-pointer"
+    onclick="closeLightbox()">
+    <img id="lightbox-img" src="" alt="Enlarged" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl object-contain">
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+    // Step 1: Open Envelope
+    function openEnvelope() {
+      const envelope = document.getElementById('envelope');
+      envelope.classList.add('opened');
+
+      setTimeout(() => {
+        document.getElementById('step-1').classList.add('hidden');
+        document.getElementById('step-2').classList.remove('hidden');
+        document.getElementById('step-2').classList.add('flex');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 700);
+    }
+
+    // Step 2 -> Step 3: Go to Letter
+    function goToLetter() {
+      document.getElementById('step-2').classList.add('hidden');
+      document.getElementById('step-2').classList.remove('flex');
+
+      document.getElementById('step-3').classList.remove('hidden');
+      document.getElementById('step-3').classList.add('flex');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Step 3 -> Step 2: Back to Photos
+    function goToPics() {
+      document.getElementById('step-3').classList.add('hidden');
+      document.getElementById('step-3').classList.remove('flex');
+
+      document.getElementById('step-2').classList.remove('hidden');
+      document.getElementById('step-2').classList.add('flex');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Lightbox image preview
+    function showLightbox(card) {
+      const img = card.querySelector('img');
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightbox-img');
+      lightboxImg.src = img.src;
+      lightbox.classList.remove('hidden');
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.add('hidden');
+    }
+
+    // Gentle Background Floating Hearts
+    function createBackgroundHearts() {
+      const container = document.getElementById('heart-container');
+      const symbols = ['❤️', '💖', '🌸', '✨'];
+      for (let i = 0; i < 15; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart';
+        heart.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDelay = (Math.random() * 6) + 's';
+        heart.style.fontSize = (Math.random() * 14 + 14) + 'px';
+        container.appendChild(heart);
+      }
+    }
+    createBackgroundHearts();
+
+    // Burst Hearts Button on Last Page
+    function burstHearts() {
+      for (let i = 0; i < 35; i++) {
+        setTimeout(() => {
+          const heart = document.createElement('div');
+          heart.innerText = ['❤️', '💖', '💘', '💕'][Math.floor(Math.random() * 4)];
+          heart.style.position = 'fixed';
+          heart.style.left = Math.random() * 100 + 'vw';
+          heart.style.bottom = '-20px';
+          heart.style.fontSize = (Math.random() * 24 + 18) + 'px';
+          heart.style.transition = 'transform 2.5s ease-out, opacity 2.5s ease-out';
+          heart.style.zIndex = '9999';
+          heart.style.pointerEvents = 'none';
+          document.body.appendChild(heart);
+
+          requestAnimationFrame(() => {
+            heart.style.transform = `translateY(-${Math.random() * 80 + 50}vh) scale(1.4)`;
+            heart.style.opacity = '0';
+          });
+
+          setTimeout(() => heart.remove(), 2500);
+        }, i * 40);
+      }
+    }
+  </script>
+</body>
+
+</html>
